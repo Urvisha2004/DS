@@ -1,0 +1,110 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.8.0 <0.9.0;
+
+
+contract ass3 {
+
+    uint256 favoriteNumber;
+
+    // This is a comment!
+    struct People {
+        uint256 favoriteNumber;
+        string name;
+    }
+
+    People[] public people;
+    mapping(string => uint256) public nameToFavoriteNumber;
+
+    function store(uint256 _favoriteNumber) public {
+        favoriteNumber = _favoriteNumber;
+    }
+    
+    function retrieve() public view returns (uint256){
+        return favoriteNumber;
+    }
+
+    function addPerson(string memory _name, uint256 _favoriteNumber) public {
+        people.push(People(_favoriteNumber, _name));
+        nameToFavoriteNumber[_name] = _favoriteNumber;
+    }
+}
+---------------------------------------------------------
+// SPDX-License-Identifier: MIT
+
+pragma solidity >=0.8.0 <0.9.0;
+
+import "./ass3.sol"; 
+
+contract ass4 is ass3 {
+    
+    ass3[] public simpleStorageArray;
+    
+    function createSimpleStorageContract() public {
+        ass3 a3 = new ass3();
+        simpleStorageArray.push(a3);
+    }
+    
+    function sfStore(uint256 _simpleStorageIndex, uint256 _simpleStorageNumber) public {
+        // Address 
+        // ABI 
+        //this line has an explicit cast to the address type and initializes a new SimpleStorage object from the address
+        ass3(address(simpleStorageArray[_simpleStorageIndex])).store(_simpleStorageNumber); 
+
+        //this line simply gets the SimpleStorage object at the index _simpleStorageIndex in the array simpleStorageArray
+        //simpleStorageArray[_simpleStorageIndex].store(_simpleStorageNumber);
+    }
+    
+    function sfGet(uint256 _simpleStorageIndex) public view returns (uint256) {
+        //this line has an explicit cast to the address type and initializes a new SimpleStorage object from the address 
+        return ass3(address(simpleStorageArray[_simpleStorageIndex])).retrieve(); 
+
+        //this line simply gets the SimpleStorage object at the index _simpleStorageIndex in the array simpleStorageArray
+        //return simpleStorageArray[_simpleStorageIndex].retrieve(); 
+    }
+}
+---------------------------------------------------------------------------
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+/*
+   FUND ME CONTRACT
+   ----------------
+   Concepts:
+   • payable → allows function to receive ETH
+   • msg.sender → who is sending the transaction
+   • msg.value → how much ETH (in wei) was sent
+   • ETH units → wei, gwei, ether
+*/
+
+contract ass5 {
+    // Keep track of who funded and how much
+    mapping(address => uint256) public addressToAmountFunded;
+    address[] public funders;
+
+    // Minimum contribution (0.01 ETH)
+    uint256 public constant MINIMUM_USD = 0.01 ether;
+
+    // Fund the contract
+    function fund() public payable {
+        // msg.value is in wei → check minimum contribution
+        require(msg.value >= MINIMUM_USD, "Send at least 0.01 ETH!");
+
+        // msg.sender = address of the sender
+        addressToAmountFunded[msg.sender] += msg.value;
+
+        // Add new funder
+        funders.push(msg.sender);
+    }
+
+    // Show balance of contract
+    function getBalance() public view returns (uint256) {
+        return address(this).balance; // total ETH stored
+    }
+
+    // Withdraw funds (only owner in real use)
+    function withdraw() public {
+        // send all ETH to the caller (msg.sender)
+        payable(msg.sender).transfer(address(this).balance);
+    }
+}
+-----------------------------------------
