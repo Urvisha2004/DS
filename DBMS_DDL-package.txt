@@ -1,0 +1,106 @@
+******Recompile PL/SQL Objects Using DBMS_DDL
+
+1.CREATE TABLE:-
+___________________
+CREATE TABLE emp_info (
+    emp_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    hire_date DATE,
+    salary NUMBER(8,2)
+);
+
+
+
+2.CREATE PROCEDURE(INVALID):-
+_______________________
+CREATE OR REPLACE PROCEDURE add_employee(
+    p_emp_id IN NUMBER,
+    p_first_name IN VARCHAR2,
+    p_last_name IN VARCHAR2,
+    p_hire_date IN DATE,
+    p_salary IN NUMBER
+) AS
+BEGIN
+    INSERT INTO employee_info(emp_id, first_name, last_name, hire_date, salary) --> employee_info
+    VALUES(p_emp_id, p_first_name, p_last_name, p_hire_date, p_salary)
+END;
+/
+
+
+3.CHECK INVLAID OBJECT STATUS:-
+____________________________________
+
+SELECT object_name, object_type, status
+FROM user_objects
+WHERE object_name = 'ADD_EMPLOYEE';
+4.COREECT SUPERMARKET:-
+____________________________
+-- Corrected procedure
+CREATE OR REPLACE PROCEDURE add_employee(
+    p_emp_id IN NUMBER,
+    p_first_name IN VARCHAR2,
+    p_last_name IN VARCHAR2,
+    p_hire_date IN DATE,
+    p_salary IN NUMBER
+) AS
+BEGIN
+    INSERT INTO emp_info(emp_id, first_name, last_name, hire_date, salary)
+    VALUES(p_emp_id, p_first_name, p_last_name, p_hire_date, p_salary);
+END;
+/
+
+5.RECOMPILE USING DBMS_DDL:-
+___________________________________
+
+BEGIN
+    DBMS_DDL.ALTER_COMPILE(
+        type   => 'PROCEDURE',
+        schema => 'MCA11',
+        name   => 'ADD_EMPLOYEE'
+    );
+END;
+/
+6.Recompile All Invalid Objects in Schema
+___________________________________________
+BEGIN
+    FOR obj IN (
+        SELECT object_name, object_type
+        FROM user_objects
+        WHERE status = 'INVALID'
+          AND object_type IN ('PACKAGE','PACKAGE BODY','PROCEDURE','FUNCTION')
+    )
+    LOOP
+        DBMS_DDL.ALTER_COMPILE(
+            type   => obj.object_type,
+            schema => 'MCA11',
+            name   => obj.object_name
+        );
+    END LOOP;
+END;
+/
+7.MANUALLY RECOMPILE:-
+_________________
+ALTER PROCEDURE ADD_EMPLOYEE COMPILE;
+
+8.EXECUTE RECOMPILE:-
+_________________
+EXEC add_employee(101, 'Urvisha', 'Hirapara', TO_DATE('2024-01-15','YYYY-MM-DD'), 55000);
+
+SELECT * FROM emp_info;
+
+[ Invalid Procedure / Package ]
+             │
+             ▼
+     [ DBMS_DDL.ALTER_COMPILE ]
+             │
+             ▼
+      [ Procedure Becomes VALID ]
+             │
+             ▼
+       [ Execute Procedure ]
+             │
+             ▼
+      [ Data Inserted Successfully ]
+
+

@@ -1,0 +1,14 @@
+create table student(
+	sid number primary key,
+	sname varchar2(50),
+	course varchar2(50),
+	marks number(5));
+
+
+insert into student values((1,'uru','mca',89),(2,'hetu','bba',90),(3,'vishal','bcom',99));
+
+
+
+create index sname_idx on student(sname);
+
+create cluster student_clt(
