@@ -1,0 +1,71 @@
+SELECT 
+   (1 - (phy.value / (cur.value + con.value))) * 100 AS buffer_cache_hit_ratio
+FROM 
+   v$sysstat cur,
+   v$sysstat con,
+   v$sysstat phy
+WHERE 
+   cur.name = 'db block gets'
+   AND con.name = 'consistent gets'
+   AND phy.name = 'physical reads';
+
+-------------------------------
+current mode
+consistent mode
+physical reads
+---------------
+formula:-
+(1 - (phy.value / (cur.value + con.value))) * 100
+---------------
+ex:-
+
+db block gets = 1,000,000
+consistent gets = 4,000,000
+physical reads = 200,000
+
+1,000,000 + 4,000,000 = 5,000,000
+
+200,000 / 5,000,000 = 0.04  (4%)
+
+1 - 0.04 = 0.96  (96%)
+0.96 * 100 = 96%
+
+------------
+≥ 90% → Excellent (database is using memory effectively).
+80–90% → Acceptable, but could improve.
+< 80% → Poor, too many disk reads (bad performance).
+
+______________________________________
+<80 then how to resolve it?
+
+-- Check current buffer cache size
+SHOW PARAMETER db_cache_size;
+
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_cache_size                        big integer 512M
+
+
+-- Increase cache size (requires DBA privileges)
+ALTER SYSTEM SET db_cache_size = 526M SCOPE=BOTH;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_cache_size                        big integer 544M
+
+
+-------------
+Current db_cache_size = 512M
+You updated to 526M
+Then Oracle should show 538M
+
+-->Oracle Uses Granules for Memory Allocation
+Total SGA Size	Granule Size
+< 1 GB		4 MB
+1–16 GB		16 MB
+> 16 GB		32 MB
+
+Suppose your granule size is 16 MB (common if total SGA > 1 GB).
+526 MB÷16≈32.875
+then 32+12=44

@@ -1,0 +1,84 @@
+Shared pool hit ratio:-
+-----------------------
+Shared Pool Hit Ratio=(1−Total ParsesSession Cursor Cache Misses + Hard Parses​)×100
+Pins = number of times an object (SQL/PLSQL) was executed.
+PinHits = number of times Oracle found it already in cache.
+
+
+SELECT 
+    ROUND(
+        (SUM(pinhits) / NULLIF(SUM(pins), 0)) * 100, 
+        2
+    ) AS library_cache_hit_ratio
+FROM 
+    v$librarycache
+WHERE 
+    pins > 0;
+
+
+_______________
+
+
+redo log buffer:-
+redo entries → total redo records generated.
+redo buffer allocation retries → how many times Oracle had to wait for space in redo buffer.
+------------
+Redo Log Buffer Hit Ratio=(1−Redo EntriesRedo Buffer Allocation Retries)×100
+
+(a) Using redo log space requests vs redo entries
+
+SELECT
+    (1 - (r.value / e.value)) * 100 AS redo_log_hit_ratio
+FROM 
+    v$sysstat r, 
+    v$sysstat e
+WHERE  
+    r.name = 'redo log space requests'
+AND    
+    e.name = 'redo entries';
+--------------
+(b) Using redo wastage vs redo entries
+
+SELECT 
+    ROUND(
+        (1 - (r.value / NULLIF(e.value, 0))) * 100, 
+        2
+    ) AS redo_log_hit_ratio
+FROM 
+    v$sysstat r, 
+    v$sysstat e
+WHERE 
+    r.name = 'redo buffer allocation retries'
+    AND e.name = 'redo entries';
+--------------------
+
+(c) Using redo buffer allocation retries vs redo entries
+SELECT 
+    ROUND(
+        (1 - (r.value / NULLIF(e.value, 0))) * 100, 
+        2
+    ) AS redo_log_hit_ratio
+FROM 
+    v$sysstat r, 
+    v$sysstat e
+WHERE 
+    r.name = 'redo buffer allocation retries'
+    AND e.name = 'redo entries';
+_________________________
+🔹 Example (Imagine Numbers)
+
+Shared Pool:
+
+Pins = 1000
+
+Reloads = 50
+
+Hit Ratio = 1 - (50 / 1000) = 0.95 → 95% ✅ Good
+
+Redo Log:
+
+Redo entries = 200000
+
+Retries = 500
+
+Hit Ratio = (1 - (500 / 200000)) × 100 = 99.75% ✅ Excellent
