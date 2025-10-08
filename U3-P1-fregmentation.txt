@@ -1,0 +1,159 @@
+Practical-1
+-----------
+- Write minimum three query to find out fragmentation in database. 
+- Derive your conclusion for the result of the query.
+
+
+
+Query 1: Free Space Distribution by Segment Type
+
+SELECT 
+    s.SEGMENT_TYPE,
+    SUM(fs.BLOCKS) AS TOTAL_FREE_BLOCKS
+FROM 
+    DBA_FREE_SPACE fs
+JOIN 
+    DBA_SEGMENTS s ON fs.TABLESPACE_NAME = s.TABLESPACE_NAME
+GROUP BY 
+    s.SEGMENT_TYPE;
+
+
+Query 2: Largest Free Blocks per Tablespace
+
+SELECT 
+    fs.TABLESPACE_NAME,
+    MAX(fs.BLOCKS) AS LARGEST_FREE_BLOCKS
+FROM 
+    DBA_FREE_SPACE fs
+GROUP BY 
+    fs.TABLESPACE_NAME;
+
+
+Query 3: Segments with Insufficient Free Space
+
+SELECT 
+    '********FREE********',
+    TABLESPACE_NAME,
+    BLOCK_ID,
+    BLOCKS
+FROM 
+    DBA_FREE_SPACE
+WHERE 
+    TABLESPACE_NAME = 'STUD'
+UNION
+SELECT 
+    '****USED****',
+    TABLESPACE_NAME,
+    BLOCK_ID,
+    BLOCKS
+FROM 
+    DBA_EXTENTS 
+WHERE 
+    TABLESPACE_NAME = 'STUD';
+
+
+
+
+1. Free Space Distribution by Segment Type: Summarizes the total free blocks available, grouped by segment type (e.g., tables, indexes).
+2. Largest Free Blocks per Tablespace: Identifies the largest contiguous free blocks available in each tablespace.
+3. Segments with Insufficient Free Space: Lists segments that have less free space than the number of blocks they occupy, indicating potential fragmentation.
+
+ Query 2: Extent Analysis for Object Fragmentation
+-- Shows objects with high extent counts (indicating fragmentation)
+SELECT 
+    owner,
+    segment_name,
+    segment_type,
+    tablespace_name,
+    extents,
+    blocks,
+    ROUND(blocks/extents,2) AS avg_blocks_per_extent
+FROM dba_segments
+WHERE extents > 10  -- Objects with more than 10 extents
+ORDER BY extents DESC;
+--------------
+
+
+CHAIN RAW:-
+___________________________________________________________
+CREATE TABLE mystudents (
+    roll_no NUMBER PRIMARY KEY,
+    student_name VARCHAR2(50),
+    remarks VARCHAR2(100)   -- large column to force chaining
+) TABLESPACE users
+PCTFREE 0
+STORAGE (
+    INITIAL 5K
+    NEXT 5K
+    MINEXTENTS 1
+    MAXEXTENTS UNLIMITED
+    PCTINCREASE 0
+);
+------------
+
+
+BEGIN
+  FOR i IN 1..100 LOOP   
+    INSERT INTO mystudents 
+    VALUES (
+      i, 
+      'Student_' || i, 
+      'Remarks for student number ' || i
+    );
+  END LOOP;
+  COMMIT;
+END;
+/
+
+---------------------------
+UPDATE mystudents SET remarks = RPAD('Large description for student_name ' || roll_no || ': ', 99, 'X');
+
+----------
+@?/rdbms/admin/utlchain.sql
+-----------------------
+ANALYZE TABLE mystudents 
+LIST CHAINED ROWS INTO chained_rows;
+---------------
+COLUMN owner_name FORMAT A15
+COLUMN table_name FORMAT A20
+COLUMN head_rowid FORMAT A20
+COLUMN analyze_timestamp FORMAT A25
+
+SELECT owner_name,
+       table_name,
+       head_rowid,
+       TO_CHAR(analyze_timestamp, 'DD-MON-YYYY HH24:MI:SS') AS analyzed_on
+FROM chained_rows
+WHERE table_name = 'MYSTUDENTS';
+--------------------------------------------------------------------------------------------------
+
+
+Create empty copy of table
+CREATE TABLE mystudents_dummy AS 
+SELECT * FROM mystudents WHERE 1=0;
+
+Copy migrated/chained rows to dummy
+INSERT INTO mystudents_dummy
+SELECT *
+FROM mystudents
+WHERE ROWID IN (
+  SELECT head_rowid
+  FROM chained_rows
+  WHERE table_name = 'MYSTUDENTS'
+);
+
+Delete bad rows from main table
+DELETE FROM mystudents
+WHERE ROWID IN (
+  SELECT head_rowid
+  FROM chained_rows
+  WHERE table_name = 'MYSTUDENTS'
+);
+
+Reinsert rows (now packed freshly into blocks)
+INSERT INTO mystudents
+SELECT * FROM mystudents_dummy;
+
+Clean up
+TRUNCATE TABLE chained_rows;
+DROP TABLE mystudents_dummy;
