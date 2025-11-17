@@ -1,0 +1,67 @@
+Company Profile
+FreshMart Supermarket is a mid-sized retail grocery chain founded in 2012 in Ahmedabad, Gujarat, India.
+Over the last decade, FreshMart has become a trusted brand known for quality groceries, fresh vegetables, fruits, bakery, dairy, and household essentials.
+The company operates 5 medium-sized supermarkets ranging from 1,500 to 4,000 sq. ft., serving more than 2,500 customers daily.
+FreshMart deals with more than 12,000 SKUs, including packaged food, FMCG goods, detergents, personal care, beverages, snacks, frozen items, and fresh produce.
+FreshMart’s vision is to become a leading regional supermarket chain with efficient operations, customer satisfaction, and optimized inventory management.
+________________________________________
+Problem / Situation
+FreshMart Supermarket used outdated manual and semi-digital systems such as Excel, Tally, and manual stock registers.
+These systems were not integrated, creating departmental silos and inefficiencies.
+This resulted in:
+•	Frequent stock-outs and overstocking
+•	Lack of real-time visibility of inventory
+•	Inaccurate stock valuation
+•	Slow billing during peak hours
+•	Errors in purchase planning
+•	No proper tracking of expiry or near-expiry items
+•	High wastage for fruits and vegetables
+•	Difficulty managing multiple store branches
+•	Manual reporting consuming 3–4 hours daily
+The management decided to adopt a modern Retail ERP system to unify and digitize all operations.
+________________________________________
+Solution and Implementation
+FreshMart selected Infor Retail ERP with integrated modules for:
+•	POS Billing
+•	Purchase & Vendor Management
+•	Inventory & Warehouse Management
+•	Accounting & GST
+•	Loyalty & Customer Management
+•	Multi-store reporting
+Infor Retail ERP provided real-time inventory visibility, automated replenishment, barcode-based billing, and expiry tracking.
+Implementation Partner: Infor Consulting Team – India
+Implementation Time: 45 days
+Key features implemented:
+1.	Centralized Inventory
+o	Real-time stock visibility across all stores
+o	Auto-reorder levels
+2.	Barcode-Based Billing System
+o	Faster checkout
+o	Reduced manual errors
+3.	Purchase Automation
+o	Auto PO generation
+o	Vendor price comparison
+4.	Expiry & Waste Management
+o	Alerts for near-expiry items
+o	Daily wastage tracking
+5.	Dashboard Reporting
+o	Sales, purchase, expenses, revenue, store-wise profits
+o	Daily automated reports
+FreshMart managers reported that Infor consultants provided close support, loaded initial data, trained the staff, and stayed available until the supermarket teams were fully confident and self-sufficient.
+________________________________________
+Benefits
+After implementation, FreshMart saw measurable improvements:
+•	Reduced inventory wastage by 35% within 2 months
+•	Stock accuracy improved from 70% to 98%
+•	Billing time reduced by 40% during rush hours
+•	Purchase planning accuracy increased to 90%
+•	Daily reporting time reduced from 3–4 hours to 15 minutes
+•	Customer satisfaction improved due to faster billing and product availability
+•	Loss prevention improved through better tracking and CCTV-POS integration
+________________________________________
+Sources
+1.	FreshMart Supermarket Operations Team
+2.	Infor Retail ERP Documentation (www.infor.com)
+________________________________________
+
+
