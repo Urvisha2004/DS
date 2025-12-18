@@ -323,75 +323,47 @@ ________________________________________________________________________________
 ASS5:-FUND ME:-
 
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+pragma solidity ^0.8.20;
 
 /*
-    FUND ME + CHAINLINK PRICE VIEW
-    ------------------------------
-    Features:
-    • Minimum funding = 0.01 ETH
-    • Track funders & amounts
-    • Withdraw all funds
-    • Read ETH/USD price from Chainlink
+   FUND ME CONTRACT
+   ----------------
+   Concepts:
+   • payable → allows function to receive ETH
+   • msg.sender → who is sending the transaction
+   • msg.value → how much ETH (in wei) was sent
+   • ETH units → wei, gwei, ether
 */
 
-contract ChainLinkFund {
-    AggregatorV3Interface internal priceFeed;
-
-    // Track funded amounts
+contract FundMe {
+    // Keep track of who funded and how much
     mapping(address => uint256) public addressToAmountFunded;
     address[] public funders;
 
     // Minimum contribution (0.01 ETH)
-    uint256 public constant MINIMUM_ETH = 0.01 ether;
+    uint256 public constant MINIMUM_USD = 0.01 ether;
 
-    // Owner (optional)
-    address public owner;
-
-    constructor() {
-        owner = msg.sender;
-
-        // ETH/USD Chainlink price feed (Sepolia)
-        priceFeed = AggregatorV3Interface(
-            0x694AA1769357215DE4FAC081bf1f309aDC325306
-        );
-    }
-
-    // FUND THE CONTRACT
+    // Fund the contract
     function fund() public payable {
-        require(msg.value >= MINIMUM_ETH, "Send at least 0.01 ETH!");
+        // msg.value is in wei → check minimum contribution
+        require(msg.value >= MINIMUM_USD, "Send at least 0.01 ETH!");
 
+        // msg.sender = address of the sender
         addressToAmountFunded[msg.sender] += msg.value;
+
+        // Add new funder
         funders.push(msg.sender);
     }
 
-    // GET CONTRACT BALANCE
+    // Show balance of contract
     function getBalance() public view returns (uint256) {
-        return address(this).balance;
+        return address(this).balance; // total ETH stored
     }
 
-    // WITHDRAW — only owner
+    // Withdraw funds (only owner in real use)
     function withdraw() public {
-        require(msg.sender == owner, "Only owner can withdraw");
-
-        (bool success, ) = owner.call{value: address(this).balance}("");
-        require(success, "Withdraw failed");
-
-        // Reset funders
-        for (uint256 i = 0; i < funders.length; i++) {
-            addressToAmountFunded[funders[i]] = 0;
-        }
-        funders = new address[](0);
-    }
-
-    // READ ETH/USD PRICE (clean format)
-    function getLatestPrice() public view returns (int256) {
-        (, int256 price, , , ) = priceFeed.latestRoundData();
-
-        // Remove Chainlink’s 8 decimals
-        return price / 1e8;
+        // send all ETH to the caller (msg.sender)
+        payable(msg.sender).transfer(address(this).balance);
     }
 }
 _____________________________________________________________________________________
@@ -568,6 +540,7 @@ python -m pip install --upgrade pip
 pip install web3
 1️⃣8️⃣ Install python-dotenv (optional but recommended)
 pip install python-dotenv
+
 
 
 
