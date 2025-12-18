@@ -1,3 +1,255 @@
+1. Using Blockchain.com Explorer
+Step 1: Open Blockchain.com
+
+Open any browser
+
+Go to: https://www.blockchain.com/
+
+Blockchain.com is a blockchain explorer used to view blocks, transactions, addresses, and miners on different blockchains like Bitcoin and Ethereum.
+
+Step 2: Go to Explorer Menu
+
+On the homepage, click on “Explorer”
+
+Select the blockchain (Bitcoin or Ethereum)
+
+2.1 View Blocks
+
+Click on Blocks
+
+A list of recent blocks is displayed
+
+Each block contains:
+
+Block Height
+
+Timestamp
+
+Number of transactions
+
+Block size
+
+Miner information
+
+2.1.1 Show Miner
+
+When a block is opened, the Miner / Validator name is shown
+
+Miner is responsible for:
+
+Validating transactions
+
+Creating new blocks
+
+Securing the blockchain network
+
+2.2 View Transactions
+
+Click on Transactions
+
+A list of recent transactions is shown
+
+2.2.1 Show Transaction Details
+
+When you open a transaction, it displays:
+
+Transaction Hash
+
+From Address
+
+To Address
+
+Amount transferred
+
+Transaction Fee
+
+Block confirmation status
+
+Timestamp
+
+This helps to verify and track blockchain transactions.
+
+Step 3: Search Specific Block and Transaction [Unit–1]
+
+Use the Search bar at the top
+
+Paste:
+
+Block hash → view block details
+
+Transaction hash → view transaction details
+
+Wallet address → view address balance and history
+
+This feature provides full transparency, a key property of blockchain.
+
+2. ETH Converter (eth-converter.com)
+Website: https://eth-converter.com/
+
+ETH Converter is used to convert:
+
+Ether (ETH)
+
+Wei
+
+Gwei
+
+USD and other currencies
+
+Explanation
+
+1 ETH = 10¹⁸ Wei
+
+Helps developers calculate transaction fees
+
+Useful for gas fee understanding
+
+Example:
+
+0.01 ETH → Wei / USD value
+
+3. MetaMask Installation and ETH Wallet
+Install MetaMask
+
+Open Chrome / Brave
+
+Go to Chrome Web Store
+
+Search MetaMask
+
+Install the extension
+
+Create Wallet
+
+Create a new wallet
+
+Secure Secret Recovery Phrase
+
+Set password
+
+Get ETH
+
+Switch to Sepolia Test Network
+
+Use faucet to receive test ETH
+
+ETH is visible in MetaMask wallet
+
+MetaMask acts as:
+
+Crypto wallet
+
+Web3 gateway
+
+Blockchain authentication tool
+
+4. Install Ganache (Windows OS)
+What is Ganache?
+
+Ganache is a local Ethereum blockchain
+
+Used for testing smart contracts
+
+Installation Steps
+
+Go to: https://trufflesuite.com/ganache
+
+Download Windows version
+
+Install and open
+
+Features
+
+Provides test accounts
+
+Each account has ETH
+
+Displays transactions, blocks, and gas usage
+
+Ganache helps developers test without real ETH.
+
+5. Remix Ethereum IDE
+Website: https://remix.ethereum.org/
+Explanation
+
+Remix is a browser-based Solidity IDE
+
+Used to:
+
+Write smart contracts
+
+Compile contracts
+
+Deploy and test contracts
+
+Features
+
+Solidity Editor
+
+Compiler
+
+Deployment environment
+
+Debugger
+
+Remix supports MetaMask and Ganache networks.
+
+6. Etherscan
+Website: https://etherscan.io/
+Explanation
+
+Etherscan is an Ethereum blockchain explorer
+
+Used to:
+
+Track transactions
+
+View smart contracts
+
+Check wallet balances
+
+Monitor gas fees
+
+Key Information Shown
+
+Transaction hash
+
+Block number
+
+Gas used
+
+Contract source code
+
+Etherscan ensures network transparency.
+
+7. Blockchain Visual Explanation Tool
+Website: https://andersbrownworth.com/blockchain
+Explanation
+
+This website visually explains how blockchain works
+
+Shows:
+
+Blocks
+
+Hashes
+
+Mining process
+
+Chain immutability
+
+Benefits
+
+Easy understanding of:
+
+Block linking
+
+Proof of Work
+
+Tamper resistance
+
+This site is very useful for beginners and students.
+
 ASS3:-BASIC SOLIDITY:-
 ------------------
 // SPDX-License-Identifier: MIT
@@ -275,5 +527,47 @@ ________________________________________________________________________________
 ASS8:-WEB3.PY INSTALLATION VSCODE,PYTHON AND WEB3
 __________________________________________________________________________________
 __________________________________________________________________________________
+1️⃣ Install MetaMask (Browser Wallet)
+2️⃣ Install Visual Studio Code (VSCode)
+3️⃣ VSCode Crash Course (Basics)
+Double click → VSCode opens
+Right click → New Folder → web3_py
+File → Open Folder → web3_py
+4.install python
+👉 https://www.python.org/downloads/
+python --version
+
+8️⃣ Install Node.js (for blockchain tools)	
+👉 https://nodejs.org/
+node -v
+npm -v
+9️⃣ Terminal Basics (Very Important)	
+Ctrl + `
+cd foldername     # enter folder
+cd ..             # go back
+dir               # list files (Windows)
+ls                # list files (Mac/Linux)
+mkdir project     # create folder
+🔟 Create Project Folder
+mkdir web3_py_simple_storage
+cd web3_py_simple_storage
+code .
+1️⃣1️⃣ Create New Files
+simple_storage.sol
+deploy.py
+1️⃣4️⃣ Solidity Compiler Version (VSCode)
+1️⃣5️⃣ Solidity Formatting (Prettier)	
+Enable Format on Save
+"editor.formatOnSave": true
+1️⃣6️⃣ Python Formatting (Black)
+pip install black
+VSCode Settings
+"python.formatting.provider": "black"
+1️⃣7️⃣ Install Web3.py
+python -m pip install --upgrade pip
+pip install web3
+1️⃣8️⃣ Install python-dotenv (optional but recommended)
+pip install python-dotenv
+
 
 
